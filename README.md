@@ -134,7 +134,7 @@ query GetLatestProducts {
 ```
 
 > 📸 **[Chèn ảnh chụp màn hình Query 2 ở đây]**
-
+![alt text](a23d39fd-33ef-4bd5-83c5-840664653878-1.jpg)
 ---
 
 ### Query 3 (Nâng cao) – Lọc sản phẩm theo Họ tên sinh viên
@@ -198,8 +198,8 @@ query GetMyProducts {
 }
 ```
 
-> 📸 **[Chèn ảnh chụp màn hình Query 3 + tab Console có dòng `console.log("Bài làm của: Nguyễn Công Sơn")` ở đây]**
-
+> 📸 *[Chèn ảnh chụp màn hình Query 3 + tab Console có dòng `console.log("Bài làm của: Nguyễn Công Sơn")` ở đây]***
+![alt text]({4566D06F-282F-4050-8C3E-87039FA03A0E}.png)
 ---
 
 ## Phần 3 – Frontend đơn giản
