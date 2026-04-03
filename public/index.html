@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Bagisto Headless – Nguyễn Công Sơn</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                --bg: #0b0f1a;
+                --card: #1a2235;
+                --border: #2a3a55;
+                --accent: #38bdf8;
+                --accent2: #818cf8;
+                --gold: #fbbf24;
+                --text: #e2e8f0;
+                --muted: #64748b;
+                --danger: #f87171;
+                --radius: 14px;
+                --font-head: "Be Vietnam Pro", sans-serif;
+                --font-mono: "Space Mono", monospace;
+            }
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                background: var(--bg);
+                color: var(--text);
+                font-family: var(--font-head);
+                min-height: 100vh;
+                overflow-x: hidden;
+            }
+            body::before {
+                content: "";
+                position: fixed;
+                inset: 0;
+                background-image: radial-gradient(
+                    circle,
+                    #38bdf820 1px,
+                    transparent 1px
+                );
+                background-size: 36px 36px;
+                pointer-events: none;
+                z-index: 0;
+            }
+            header {
+                position: relative;
+                z-index: 10;
+                padding: 48px 24px 36px;
+                text-align: center;
+                background: linear-gradient(160deg, #0f1e38 0%, #0b0f1a 70%);
+                border-bottom: 1px solid var(--border);
+            }
+            .header-badge {
+                display: inline-block;
+                background: linear-gradient(
+                    90deg,
+                    var(--accent),
+                    var(--accent2)
+                );
+                color: #0b0f1a;
+                font-family: var(--font-mono);
+                font-size: 0.7rem;
+                font-weight: 700;
+                letter-spacing: 0.15em;
+                padding: 4px 14px;
+                border-radius: 999px;
+                margin-bottom: 18px;
+                text-transform: uppercase;
+            }
+            .student-name {
+                font-size: clamp(2rem, 5vw, 3.4rem);
+                font-weight: 800;
+                background: linear-gradient(
+                    135deg,
+                    var(--accent) 0%,
+                    var(--accent2) 100%
+                );
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                line-height: 1.1;
+            }
+            .student-id {
+                margin-top: 10px;
+                font-family: var(--font-mono);
+                font-size: 1rem;
+                color: var(--gold);
+            }
+            .student-id span {
+                background: #fbbf2422;
+                padding: 2px 10px;
+                border-radius: 6px;
+                border: 1px solid #fbbf2440;
+            }
+            .header-sub {
+                margin-top: 8px;
+                color: var(--muted);
+                font-size: 0.85rem;
+            }
+            main {
+                position: relative;
+                z-index: 1;
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 48px 24px 80px;
+            }
+            .section-title {
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: var(--text);
+                margin-bottom: 6px;
+            }
+            .section-title span {
+                color: var(--accent);
+            }
+            .section-sub {
+                color: var(--muted);
+                font-size: 0.88rem;
+                margin-bottom: 32px;
+            }
+            #status {
+                text-align: center;
+                padding: 60px 20px;
+                font-size: 1rem;
+            }
+            .loader {
+                display: inline-block;
+                width: 36px;
+                height: 36px;
+                border: 3px solid var(--border);
+                border-top-color: var(--accent);
+                border-radius: 50%;
+                animation: spin 0.8s linear infinite;
+                margin-bottom: 16px;
+            }
+            @keyframes spin {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+            .error-msg {
+                background: #f8717122;
+                border: 1px solid var(--danger);
+                color: var(--danger);
+                padding: 14px 20px;
+                border-radius: var(--radius);
+                font-family: var(--font-mono);
+                font-size: 0.82rem;
+                text-align: left;
+                line-height: 1.6;
+            }
+            #product-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 24px;
+            }
+            .product-card {
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                transition:
+                    transform 0.25s ease,
+                    box-shadow 0.25s ease,
+                    border-color 0.25s ease;
+            }
+            .product-card:hover {
+                transform: translateY(-6px);
+                box-shadow:
+                    0 20px 40px #00000055,
+                    0 0 0 1px var(--accent) 55;
+                border-color: var(--accent) 66;
+            }
+            .card-thumb {
+                width: 100%;
+                aspect-ratio: 4/3;
+                background: linear-gradient(135deg, #1e2d44 0%, #0f1e38 100%);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 2.5rem;
+                color: var(--border);
+                flex-shrink: 0;
+            }
+            .card-body {
+                padding: 20px;
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .card-name {
+                font-size: 1rem;
+                font-weight: 700;
+                line-height: 1.4;
+                color: var(--text);
+            }
+            .card-price {
+                font-family: var(--font-mono);
+                font-size: 1.1rem;
+                font-weight: 700;
+                color: var(--gold);
+            }
+            .card-desc {
+                font-size: 0.82rem;
+                color: var(--muted);
+                line-height: 1.55;
+                flex: 1;
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+            .card-key {
+                font-family: var(--font-mono);
+                font-size: 0.72rem;
+                color: var(--accent2);
+                background: #818cf810;
+                border: 1px solid #818cf825;
+                padding: 3px 8px;
+                border-radius: 5px;
+                align-self: flex-start;
+            }
+            .btn-detail {
+                display: block;
+                width: 100%;
+                margin-top: 14px;
+                padding: 11px;
+                background: transparent;
+                border: 1.5px solid var(--accent);
+                color: var(--accent);
+                font-family: var(--font-head);
+                font-size: 0.88rem;
+                font-weight: 600;
+                border-radius: 8px;
+                cursor: pointer;
+                transition:
+                    background 0.2s,
+                    color 0.2s,
+                    transform 0.15s;
+                text-align: center;
+                text-decoration: none;
+            }
+            .btn-detail:hover {
+                background: var(--accent);
+                color: #0b0f1a;
+                transform: scale(1.02);
+            }
+            footer {
+                position: relative;
+                z-index: 1;
+                text-align: center;
+                padding: 24px;
+                border-top: 1px solid var(--border);
+                color: var(--muted);
+                font-size: 0.8rem;
+                font-family: var(--font-mono);
+            }
+            footer span {
+                color: var(--accent);
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div class="header-badge">Bagisto Headless Commerce · GraphQL</div>
+            <h1 class="student-name">Nguyễn Công Sơn</h1>
+            <p class="student-id"><span>MSSV: 23810310102</span></p>
+            <p class="header-sub">
+                Bài thực hành: Headless Commerce với Bagisto + GraphQL API
+            </p>
+        </header>
+        <main>
+            <h2 class="section-title">
+                Danh sách <span>sản phẩm</span> mới nhất
+            </h2>
+            <p class="section-sub">
+                Dữ liệu tải từ Bagisto GraphQL API – 05 sản phẩm mới nhất
+            </p>
+            <div id="status">
+                <div class="loader"></div>
+                <p style="color: var(--muted)">Đang tải dữ liệu từ API...</p>
+            </div>
+            <div id="product-grid"></div>
+        </main>
+        <footer>
+            Powered by <span>Bagisto Headless</span> · GraphQL Fetch API · Sinh
+            viên: <span>Nguyễn Công Sơn</span> – MSSV: <span>23810310102</span>
+        </footer>
+        <script>
+            // ============================================================
+            // CẤU HÌNH – chỉ cần sửa AUTH_TOKEN khi token hết hạn
+            // ============================================================
+
+            const GRAPHQL_ENDPOINT = "http://localhost:8000/graphql";
+
+            /**
+             * AUTH_TOKEN: Dán accessToken từ mutation userLogin vào đây.
+             * Token hết hạn sau 1 giờ. Lấy token mới tại:
+             * http://localhost:8000/graphiql → chạy mutation userLogin
+             */
+            const AUTH_TOKEN =
+                " eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvZ3JhcGhxbCIsImlhdCI6MTc3NTIwNjMyNiwiZXhwIjoxNzc1MjA5OTI2LCJuYmYiOjE3NzUyMDYzMjYsImp0aSI6IkxVTzBHNXFHRExjaktidTciLCJzdWIiOiIxIiwicHJ2IjoiZGJhMjRmYmQ5OWI2MWE1MGUxYWU4ODU3NGJmMmQwZTI3M2FkZmU4NyJ9.NaHPZ8X_I-n8Wyc_LeN2jvGu4i5Wea4SRkxYTFfYFKY";
+
+            /**
+             * QUERY – Lấy 5 sản phẩm mới nhất (Bagisto v1.x syntax).
+             *
+             * Khác với REST API (trả về 30+ trường không cần thiết),
+             * GraphQL chỉ trả đúng 5 trường được yêu cầu → tiết kiệm ~90% payload.
+             *
+             * Cú pháp Bagisto v1.x:
+             *   - input: { limit, page }  (không dùng first/offset như v2)
+             *   - urlKey (camelCase)      (không dùng url_key như REST)
+             */
+            const GET_PRODUCTS_QUERY = `
+      {
+        products(input: { limit: 5, page: 1 }) {
+          data {
+            id
+            name
+            price
+            description
+            urlKey
+          }
+        }
+      }
+    `;
+
+            /**
+             * fetchProducts()
+             * Gọi GraphQL API bằng Fetch (POST).
+             * Authorization header bắt buộc với Bagisto v1.x.
+             */
+            async function fetchProducts() {
+                const statusEl = document.getElementById("status");
+                const gridEl = document.getElementById("product-grid");
+
+                if (AUTH_TOKEN === "PASTE_TOKEN_HERE") {
+                    statusEl.innerHTML = `<div class="error-msg">
+          ⚠️ Chưa điền Bearer Token!<br/><br/>
+          Mở file index.html → tìm dòng <b>AUTH_TOKEN</b><br/>
+          → Thay <b>'PASTE_TOKEN_HERE'</b> bằng accessToken từ mutation userLogin.<br/><br/>
+          <small>Lấy token tại: http://localhost:8000/graphiql</small>
+        </div>`;
+                    return;
+                }
+
+                try {
+                    // POST request tới GraphQL endpoint kèm Bearer token
+                    const response = await fetch(GRAPHQL_ENDPOINT, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Accept: "application/json",
+                            // Header xác thực – bắt buộc với Bagisto v1.x GraphQL
+                            Authorization: `Bearer ${AUTH_TOKEN}`,
+                        },
+                        body: JSON.stringify({ query: GET_PRODUCTS_QUERY }),
+                    });
+
+                    if (!response.ok)
+                        throw new Error(
+                            `HTTP ${response.status}: ${response.statusText}`,
+                        );
+
+                    const json = await response.json();
+
+                    // GraphQL trả lỗi trong mảng errors[] thay vì HTTP 4xx
+                    if (json.errors?.length > 0)
+                        throw new Error(
+                            json.errors.map((e) => e.message).join("\n"),
+                        );
+
+                    const products = json?.data?.products?.data ?? [];
+
+                    statusEl.style.display = "none";
+                    if (products.length === 0) {
+                        statusEl.style.display = "block";
+                        statusEl.innerHTML =
+                            '<p style="color:var(--muted)">Không có sản phẩm nào.</p>';
+                        return;
+                    }
+                    renderProducts(products, gridEl);
+                } catch (err) {
+                    statusEl.innerHTML = `<div class="error-msg">
+          ❌ Lỗi kết nối API:<br/><br/>
+          ${err.message}<br/><br/>
+          <small>Kiểm tra Bagisto đang chạy tại ${GRAPHQL_ENDPOINT}</small><br/>
+          <small>Token còn hạn? (hết hạn sau 1 giờ)</small>
+        </div>`;
+                    console.error("[Bagisto GraphQL Error]", err);
+                }
+            }
+
+            // Định dạng số → tiền VND: 1200000 → "1.200.000 ₫"
+            function formatPrice(price) {
+                return new Intl.NumberFormat("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                }).format(price);
+            }
+
+            // Render danh sách card sản phẩm vào #product-grid
+            function renderProducts(products, container) {
+                container.innerHTML = "";
+                products.forEach((product) => {
+                    // Xóa HTML tags từ description (Bagisto lưu dạng <p>text</p>)
+                    const desc = product.description
+                        ? product.description.replace(/<[^>]*>/g, "").trim()
+                        : "Chưa có mô tả.";
+
+                    const card = document.createElement("div");
+                    card.className = "product-card";
+                    card.innerHTML = `
+          <div class="card-thumb">📦</div>
+          <div class="card-body">
+            <p class="card-name">${product.name}</p>
+            <p class="card-price">${formatPrice(product.price)}</p>
+            <p class="card-desc">${desc}</p>
+            <span class="card-key">/${product.urlKey}</span>
+            <a class="btn-detail" href="http://localhost:8000/${product.urlKey}" target="_blank" rel="noopener">
+              Chi tiết →
+            </a>
+          </div>`;
+                    container.appendChild(card);
+                });
+            }
+
+            document.addEventListener("DOMContentLoaded", fetchProducts);
+        </script>
+    </body>
+</html>
